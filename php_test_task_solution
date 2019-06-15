@@ -1,0 +1,28 @@
+Задание 1
+
+<?php
+
+$x = 0;    
+$y = 1; 
+
+for($i=0;$i<64;$i++)    
+{    
+    $z = $x + $y;    
+    echo $z."<br />";         
+    $x=$y;       
+    $y=$z;     
+}   
+
+?>
+
+Задание 2 
+
+SELECT author
+FROM library
+GROUP BY author
+HAVING COUNT(book) < 7
+
+Задание 3
+
+
+
