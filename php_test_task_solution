@@ -1,12 +1,11 @@
-Задание 1
+Задание 1:
 
 <?php
 
 $x = 0;    
 $y = 1; 
 
-for($i=0;$i<64;$i++)    
-{    
+for($i=0;$i<64;$i++) {    
     $z = $x + $y;    
     echo $z."<br />";         
     $x=$y;       
@@ -15,14 +14,127 @@ for($i=0;$i<64;$i++)
 
 ?>
 
-Задание 2 
+Задание 2:
 
 SELECT author
 FROM library
 GROUP BY author
 HAVING COUNT(book) < 7
 
-Задание 3
+Задание 3:
 
+<?php
 
+class Rectangle
+{
+	public $a;
+	public $b;
+	public $area;
 
+	public function __construct() {
+		$this->a = mt_rand(2,40);
+		$this->b = mt_rand(2,40);
+		$this->area = $this->calculateArea();
+		
+	}
+
+	public function calculateArea(): float {
+		return $this->a * $this->b;
+	}
+	
+	public function getClass() : string {
+		return get_class($this);
+	}
+}
+
+class Circle
+{
+	const PI = 3.1416;
+	public $r;
+	public $area;
+
+	public function __construct() {
+		$this->r = mt_rand(2,40);
+		$this->area = $this->calculateArea();
+	}
+
+	public function calculateArea(): float {
+		return self::PI * ($this->r ** 2);
+    }
+	
+	public function getClass() : string {
+		return get_class($this);
+	}
+}
+
+class Piramide
+{
+	//через апофему
+	public $sideLength;
+	public $sidesNum;
+	public $apothem;
+	public $area;
+
+	public function __construct() {
+		$this->sideLength = mt_rand(2,40);
+		$this->sidesNum = mt_rand(3,40);
+		$this->apothem = mt_rand(2,40);
+		$this->area = $this->calculateArea();
+	}
+
+	public function calculateArea(): float {
+		return ($this->sideLength + $this->sidesNum) / 2 * $this->apothem;
+	}
+	
+	public function getClass() : string {
+		return get_class($this);
+	}
+}
+
+$figures = [
+	new Rectangle,
+	new Circle,
+	new Piramide
+	];
+
+$object = new $figures[array_rand($figures)];
+
+switch ($object->getClass()) {
+	case 'Rectangle':
+		echo 'Объект класса ' .$object->getClass(). ". S = $object->a * $object->b = $object->area.\n";
+		break;
+	case 'Circle':
+		echo 'Объект класса ' .$object->getClass(). ". S = PI *($object->r * $object->r) = $object->area.\n";
+		break;
+	case 'Piramide':
+		echo 'Объект класса ' .$object->getClass(). ". S = ($object->sidesNum * $object->sideLength.)/2 * $object->apothem = $object->area.\n";
+		break;
+}
+
+$objects = [];
+$file = 'collection.txt';
+
+if (file_exists ($file)) {
+	if (filesize($file) != 0) {
+		$objects = unserialize(file_get_contents($file));
+		array_push($objects, $object);
+	} else {
+		array_push($objects, $object);
+	}
+} else { 
+	fopen($file, "w");
+}
+
+//сортировка объектов с сохранением ключей
+uasort($objects, function ($a, $b) {
+    if ($a->area == $b->area) { return 0; }
+    	return ($a->area < $b->area) ? 1 : -1;
+});
+
+echo '<pre>';
+print_r($objects);
+echo '</pre>';
+
+file_put_contents($file, serialize($objects));
+
+?>
